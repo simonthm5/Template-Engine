@@ -48,6 +48,7 @@ const managerQuestions = () => {
         ]).then(function(response) {
             employee = new Manager(response.name, response.email, response.id, response.officeNumber);
             employees.push(employee);
+            engineerQuestions();
         }
     )
 }
@@ -78,6 +79,7 @@ const engineerQuestions = () => {
         ]).then(function(response) {
             employee = new Engineer(response.name, response.email, response.id, response.github);
             employees.push(employee);
+            internQuestions();
         });
 }
 
@@ -104,10 +106,18 @@ const internQuestions = () => {
                 name: "school",
                 message: "Enter the Intern school"
             }
+            
         ]).then(function(response) {
             employee = new Intern(response.name, response.email, response.id, response.school);
             employees.push(employee);
+            renderEmployee();
         });
+}
+
+
+const init = () => {
+    console.log("Welcome to the Employee Template Engine");
+    managerQuestions();
 }
 
 async function renderEmployee(){
@@ -116,13 +126,6 @@ async function renderEmployee(){
 }
 
 
-const init = () => {
-    console.log("Welcome to the Employee Template Engine");
-    managerQuestions();
-    engineerQuestions();
-    internQuestions();
-    renderEmployee();
-}
 
 //start the program
 init();
