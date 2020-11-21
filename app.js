@@ -9,7 +9,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 // write files asynchronisly
 const util = require("util");
-const writeFileSync = util.promisify(fs.writeFile);
+const fileWriter = util.promisify(fs.writeFile);
 
 // employee data storage
 const employees =[];
@@ -73,7 +73,7 @@ const engineerQuestions = () => {
             {
                 type: "input",
                 name: "officeNumber",
-                message: "Enter your Engineer Github address"
+                message: "Enter the Engineer Github address"
             }
         ]).then(function(response) {
             employee = new Engineer(response.name, response.email, response.id, response.github);
@@ -81,9 +81,48 @@ const engineerQuestions = () => {
         });
 }
 
+const internQuestions = () => {
+    inquirer.prompt(
+        [
+            {
+                type: "input",
+                name: "name",
+                message: "Enter the Intern name"
+            },
+            {
+                type: "input",
+                name: "email",
+                message: "Enter the Intern email"
+            },
+            {
+                type: "input",
+                name: "id",
+                message: "Enter the Intern id"
+            },
+            {
+                type: "input",
+                name: "school",
+                message: "Enter the Intern school"
+            }
+        ]).then(function(response) {
+            employee = new Intern(response.name, response.email, response.id, response.school);
+            employees.push(employee);
+        });
+}
+
+async function renderEmployee(){
+    const renderEmployees = render(employees);
+    await fileWriter(outputPath, renderEmployees);
+}
 
 
 const init = () => {
     console.log("Welcome to the Employee Template Engine");
     managerQuestions();
     engineerQuestions();
+    internQuestions();
+    renderEmployee();
+}
+
+//start the program
+init();
